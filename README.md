@@ -1,4 +1,4 @@
-# 🔍 OSINT Resource Center
+# 🔍 OSINT recurso Center @Mr-LeonardoGomes
 
 **Coleção Grauda de sites e ferramentas-cli para investigação de fontes abertas**
 
