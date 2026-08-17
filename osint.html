@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT Resource Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e17;
+            color: #e0e0e0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            padding: 40px 0 30px;
+            border-bottom: 2px solid #00ff41;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            font-size: 3rem;
+            color: #00ff41;
+            text-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 4px;
+        }
+        header p {
+            color: #8899aa;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+        .badge {
+            display: inline-block;
+            background: #00ff41;
+            color: #0a0e17;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-left: 8px;
+        }
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        @media (max-width: 900px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+        }
+        .card {
+            background: #111927;
+            border-radius: 12px;
+            padding: 20px 24px;
+            border: 1px solid #1a2a3a;
+            margin-bottom: 24px;
+        }
+        .card h2 {
+            color: #00ff41;
+            font-size: 1.3rem;
+            border-bottom: 1px solid #1a2a3a;
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card h2 .icon {
+            font-size: 1.5rem;
+        }
+        .card h3 {
+            color: #66ccff;
+            font-size: 0.95rem;
+            margin: 14px 0 8px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .link-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+        }
+        .link-list li {
+            font-size: 0.9rem;
+        }
+        .link-list a {
+            color: #aaccee;
+            text-decoration: none;
+            transition: color 0.2s, text-shadow 0.2s;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid transparent;
+        }
+        .link-list a:hover {
+            color: #00ff41;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+            border-color: rgba(0, 255, 65, 0.2);
+            background: rgba(0, 255, 65, 0.08);
+        }
+        .tag {
+            display: inline-block;
+            background: #1a2a3a;
+            color: #8899aa;
+            font-size: 0.6rem;
+            padding: 1px 8px;
+            border-radius: 12px;
+            margin-left: 6px;
+        }
+        .section-title {
+            color: #66ccff;
+            font-size: 1.8rem;
+            font-family: 'Courier New', monospace;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1a2a3a;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .section-title .line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, #1a2a3a, transparent);
+        }
+        .footer {
+            text-align: center;
+            padding: 30px 0 20px;
+            color: #445566;
+            font-size: 0.8rem;
+            border-top: 1px solid #1a2a3a;
+            margin-top: 30px;
+        }
+        .footer a {
+            color: #66ccff;
+            text-decoration: none;
+        }
+        .count {
+            color: #445566;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+        /* Badges para diferenciar SITE x TOOL */
+        .badge-site {
+            background: #006633;
+            color: #00ff41;
+            padding: 1px 10px;
+            border-radius: 12px;
+            font-size: 0.6rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .badge-tool {
+            background: #334466;
+            color: #66ccff;
+            padding: 1px 10px;
+            border-radius: 12px;
+            font-size: 0.6rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .badge-github {
+            background: #1a2a3a;
+            color: #ffaa44;
+            padding: 1px 10px;
+            border-radius: 12px;
+            font-size: 0.6rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .cat-sites { border-left: 3px solid #00ff41; }
+        .cat-tools { border-left: 3px solid #ff8800; }
+        .cat-github { border-left: 3px solid #ffaa44; }
+        .badge-cli { background: #446688; color: #fff; padding: 1px 10px; border-radius: 12px; font-size: 0.6rem; font-weight: bold; }
+        .badge-web { background: #2288aa; color: #fff; padding: 1px 10px; border-radius: 12px; font-size: 0.6rem; font-weight: bold; }
+        .badge-free { background: #00ff41; color: #0a0e17; padding: 1px 10px; border-radius: 12px; font-size: 0.6rem; font-weight: bold; }
+        .badge-paid { background: #ff8800; color: #0a0e17; padding: 1px 10px; border-radius: 12px; font-size: 0.6rem; font-weight: bold; }
+        .badge-install { background: #8844aa; color: #fff; padding: 1px 10px; border-radius: 12px; font-size: 0.6rem; font-weight: bold; }
+        /* separador visual entre seções dentro do card */
+        .divider-light {
+            border: none;
+            border-top: 1px dashed #1a2a3a;
+            margin: 14px 0;
+        }
+        .sub-label {
+            color: #445566;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 12px 0 6px 0;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <h1>🔍 OSINT Resource Center</h1>
+        <h1 align="center"> @Mr-LeonardoGomes </h1>
+        <p>Coleção curada de sites e ferramentas para inteligência de fontes abertas</p>
+        <p></p>
+        <p style="font-size:0.8rem; color:#445566; margin-top:8px;">Atualizado: Abril 2026 • <span id="totalCount"></span> recursos listados</p>
+         <div align="center">
+         <img src="https://img.shields.io/badge/Versão-2026-blue?style=for-the-badge&logo=github" alt="Versão 2026"/>
+         <img src="https://img.shields.io/badge/Status-Ativo-brightgreen?style=for-the-badge" alt="Status Ativo"/>
+         <img src="https://img.shields.io/badge/PRs-Bem--vindos-brightgreen?style=for-the-badge&logo=github" alt="PRs Bem-vindos"/>
+         <img src="https://img.shields.io/badge/Licença-MIT-yellow?style=for-the-badge" alt="Licença MIT"/> <br>
+         <img src="https://img.shields.io/badge/Feito%20com-❤️-red?style=for-the-badge" alt="Feito com amor"/>
+         <img src="https://img.shields.io/badge/Bug%20Bounty-2026-blueviolet?style=for-the-badge" alt="Bug Bounty 2026"/>
+         <img src="https://img.shields.io/badge/Pentest-Metodologia-orange?style=for-the-badge" alt="Pentest Metodologia"/>
+         <br>
+
+<div align="center">
+  <img src="https://i.postimg.cc/jSyw7j1L/Mr-Leonardo-Gomes.png" alt="Metodologia de Caça a Bugs 2026" style="width: 90%; max-width: 700px;">
+</div>
+
+         </div>
+
+    </header>
+
+
+    <!-- ============================================================ -->
+    <!-- SEÇÃO: SITES OSINT (PRONTOS PARA USO ONLINE) -->
+    <!-- ============================================================ -->
+    <div class="section-title">
+        🌐 SITES OSINT <span class="count">(serviços online prontos para uso)</span>
+        <span class="line"></span>
+    </div>
+
+    <div class="grid-2col">
+
+        <!-- 1. DIRETÓRIOS E PONTOS DE PARTIDA -->
+        <div class="card cat-sites">
+            <h2><span class="icon">📂</span> Diretórios &amp; Pontos de Partida <span class="badge-site">SITE</span></h2>
+            <ul class="link-list">
+                <li><a href="https://osintframework.com/" target="_blank">OSINT Framework</a> <span class="tag">diretório</span></li>
+                <li><a href="https://inteltechniques.com/tools/" target="_blank">IntelTechniques Tools</a> <span class="tag">diretório</span></li>
+                <li><a href="https://metaosint.com/" target="_blank">MetaOSINT</a> <span class="tag">indexador</span></li>
+                <li><a href="https://osint.link/" target="_blank">OSINT.link</a> <span class="tag">diretório</span></li>
+                <li><a href="https://start.me/p/rx6Qj8/osint" target="_blank">OSINT Start.me</a> <span class="tag">dashboard</span></li>
+            </ul>
+        </div>
+
+        <!-- 2. MECANISMOS DE BUSCA ESPECIALIZADOS -->
+        <div class="card cat-sites">
+            <h2><span class="icon">🔎</span> Mecanismos de Busca Especializados <span class="badge-site">SITE</span></h2>
+            <ul class="link-list">
+                <li><a href="https://www.shodan.io/" target="_blank">Shodan</a> <span class="tag">dispositivos IoT</span></li>
+                <li><a href="https://search.censys.io/" target="_blank">Censys</a> <span class="tag">certificados SSL</span></li>
+                <li><a href="https://www.zoomeye.org/" target="_blank">ZoomEye</a> <span class="tag">dispositivos</span></li>
+                <li><a href="https://www.onyphe.io/" target="_blank">Onyphe</a> <span class="tag">dados de rede</span></li>
+                <li><a href="https://fofa.info/" target="_blank">FOFA</a> <span class="tag">chinesa</span></li>
+                <li><a href="https://www.binaryedge.io/" target="_blank">BinaryEdge</a> <span class="tag">escaneamento</span></li>
+                <li><a href="https://www.leakix.net/" target="_blank">LeakIX</a> <span class="tag">vazamentos</span></li>
+                <li><a href="https://www.criminalip.io/" target="_blank">CriminalIP</a> <span class="tag">inteligência de ameaças</span></li>
+            </ul>
+        </div>
+
+        <!-- 3. BUSCA POR PESSOAS -->
+        <div class="card cat-sites">
+            <h2><span class="icon">👤</span> Busca por Pessoas &amp; Identidades <span class="badge-site">SITE</span></h2>
+            <ul class="link-list">
+                <li><a href="https://pipl.com/" target="_blank">Pipl</a> <span class="tag">deep web</span></li>
+                <li><a href="https://www.spokeo.com/" target="_blank">Spokeo</a> <span class="tag">dados pessoais</span></li>
+                <li><a href="https://www.peekyou.com/" target="_blank">PeekYou</a> <span class="tag">redes sociais</span></li>
+                <li><a href="https://thatsthem.com/" target="_blank">That&rsquo;s Them</a> <span class="tag">EUA</span></li>
+                <li><a href="https://www.truthfinder.com/" target="_blank">TruthFinder</a> <span class="tag">pago</span></li>
+                <li><a href="https://www.familytreenow.com/" target="_blank">FamilyTreeNow</a> <span class="tag">gratuito</span></li>
+                <li><a href="https://www.verifymail.io/" target="_blank">VerifyMail</a> <span class="tag">verificação de e-mail</span></li>
+            </ul>
+        </div>
+
+        <!-- 4. DADOS VAZADOS (BREACH DATA) -->
+        <div class="card cat-sites">
+            <h2><span class="icon">💀</span> Dados Vazados &amp; Breaches <span class="badge-site">SITE</span></h2>
+            <ul class="link-list">
+                <li><a href="https://haveibeenpwned.com/" target="_blank">Have I Been Pwned</a> <span class="tag">e-mail</span></li>
+                <li><a href="https://dehashed.com/" target="_blank">DeHashed</a> <span class="tag">credenciais</span></li>
+                <li><a href="https://intelx.io/" target="_blank">IntelligenceX</a> <span class="tag">deep/dark web</span></li>
+                <li><a href="https://scylla.so/" target="_blank">Scylla</a> <span class="tag">vazamentos</span></li>
+                <li><a href="https://breachdirectory.org/" target="_blank">BreachDirectory</a> <span class="tag">API</span></li>
+                <li><a href="https://leakcheck.net/" target="_blank">LeakCheck</a> <span class="tag">pago</span></li>
+                <li><a href="https://snusbase.com/" target="_blank">Snusbase</a> <span class="tag">pago</span></li>
+            </ul>
+        </div>
+
+        <!-- 5. DARK WEB / DEEP WEB -->
+        <div class="card cat-sites">
+            <h2><span class="icon">🌑</span> Dark Web &amp; Deep Web <span class="badge-site">SITE</span></h2>
+            <ul class="link-list">
+                <li><a href="https://ahmia.fi/" target="_blank">Ahmia</a> <span class="tag">clearnet</span></li>
+                <li><a href="http://msydqstlz2kzerdg.onion/" target="_blank">OnionLand</a> <span class="tag">.onion</span></li>
+                <li><a href="https://dark.fail/" target="_blank">Dark.fail</a> <span class="tag">status de serviços</span></li>
+                <li><a href="https://www.darkwebnews.com/" target="_blank">Dark Web News</a> <span class="tag">notícias</span></li>
+                <li><a href="http://torwikignoueupfm.onion/" target="_blank">Tor Wiki</a> <span class="tag">.onion</span></li>
+                <li><a href="https://dnmnexus.com/" target="_blank">DNM Nexus</a> <span class="tag">darknet markets</span></li>
+            </ul>
+        </div>
+
+        <!-- 6. REDES SOCIAIS E NOMES DE USUÁRIO -->
+        <div class="card cat-sites">
+            <h2><span class="icon">📱</span> Redes Sociais &amp; Nomes de Usuário <span class="badge-site">SITE</span></h2>
+            <ul class="link-list">
+                <li><a href="https://whatsmyname.app/" target="_blank">WhatsMyName</a> <span class="tag">verificação</span></li>
+                <li><a href="https://namechk.com/" target="_blank">Namechk</a> <span class="tag">disponibilidade</span></li>
+                <li><a href="https://knowem.com/" target="_blank">KnowEm</a> <span class="tag">marca</span></li>
+                <li><a href="https://social-searcher.com/" target="_blank">Social Searcher</a> <span class="tag">busca em tempo real</span></li>
+                <li><a href="https://www.socialblade.com/" target="_blank">Social Blade</a> <span class="tag">estatísticas</span></li>
+                <li><a href="https://tweettunnel.com/" target="_blank">Tweet Tunnel</a> <span class="tag">Twitter</span></li>
+                <li><a href="https://www.reddit.com/r/OSINT/wiki/index/" target="_blank">Reddit OSINT Wiki</a> <span class="tag">comunidade</span></li>
+            </ul>
+        </div>
+
+        <!-- 7. GEOLOCALIZAÇÃO E MAPAS -->
+        <div class="card cat-sites">
+            <h2><span class="icon">🗺️</span> Geolocalização &amp; Mapas <span class="badge-site">SITE</span></h2>
+            <ul class="link-list">
+                <li><a href="https://earth.google.com/" target="_blank">Google Earth</a> <span class="tag">satélite</span></li>
+                <li><a href="https://www.sentinel-hub.com/explore/eobrowser/" target="_blank">Sentinel Hub EO Browser</a> <span class="tag">satélite</span></li>
+                <li><a href="https://www.mapillary.com/" target="_blank">Mapillary</a> <span class="tag">imagens de rua</span></li>
+                <li><a href="https://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> <span class="tag">colaborativo</span></li>
+                <li><a href="https://www.geoguessr.com/" target="_blank">GeoGuessr</a> <span class="tag">treino</span></li>
+                <li><a href="https://www.flightradar24.com/" target="_blank">FlightRadar24</a> <span class="tag">voos</span></li>
+                <li><a href="https://www.marinetraffic.com/" target="_blank">MarineTraffic</a> <span class="tag">navios</span></li>
+            </ul>
+        </div>
+
+        <!-- 8. IMAGENS E VÍDEOS -->
+        <div class="card cat-sites">
+            <h2><span class="icon">🖼️</span> Análise de Imagens &amp; Vídeos <span class="badge-site">SITE</span></h2>
+            <ul class="link-list">
+                <li><a href="https://tineye.com/" target="_blank">TinEye</a> <span class="tag">busca reversa</span></li>
+                <li><a href="https://www.fotoforensics.com/" target="_blank">FotoForensics</a> <span class="tag">análise forense</span></li>
+                <li><a href="https://www.forensicdots.de/" target="_blank">ForensicDots</a> <span class="tag">metadados</span></li>
+                <li><a href="https://www.invid-project.eu/" target="_blank">InVID</a> <span class="tag">verificação de vídeos</span></li>
+                <li><a href="https://www.revealproject.eu/" target="_blank">Reveal Project</a> <span class="tag">ferramentas</span></li>
+                <li><a href="https://www.vidlii.com/" target="_blank">VidLii</a> <span class="tag">alternativa</span></li>
+            </ul>
+        </div>
+
+        <!-- 9. DOMÍNIO, IP E DNS -->
+        <div class="card cat-sites">
+            <h2><span class="icon">🌐</span> Domínio, IP &amp; DNS <span class="badge-site">SITE</span></h2>
+            <ul class="link-list">
+                <li><a href="https://securitytrails.com/" target="_blank">SecurityTrails</a> <span class="tag">DNS</span></li>
+                <li><a href="https://dnsdumpster.com/" target="_blank">DNSDumpster</a> <span class="tag">subdomínios</span></li>
+                <li><a href="https://www.abuseipdb.com/" target="_blank">AbuseIPDB</a> <span class="tag">reputação IP</span></li>
+                <li><a href="https://www.virustotal.com/" target="_blank">VirusTotal</a> <span class="tag">domínios/URLs</span></li>
+                <li><a href="https://whois.domaintools.com/" target="_blank">DomainTools Whois</a> <span class="tag">whois</span></li>
+                <li><a href="https://www.robtex.com/" target="_blank">Robtex</a> <span class="tag">DNS</span></li>
+                <li><a href="https://viewdns.info/" target="_blank">ViewDNS</a> <span class="tag">ferramentas DNS</span></li>
+                <li><a href="https://mxtoolbox.com/" target="_blank">MXToolbox</a> <span class="tag">e-mail/DNS</span></li>
+            </ul>
+        </div>
+
+        <!-- 10. E-MAIL -->
+        <div class="card cat-sites">
+            <h2><span class="icon">📧</span> Análise de E-mail <span class="badge-site">SITE</span></h2>
+            <ul class="link-list">
+                <li><a href="https://hunter.io/" target="_blank">Hunter.io</a> <span class="tag">e-mails de domínio</span></li>
+                <li><a href="https://emailrep.io/" target="_blank">EmailRep</a> <span class="tag">reputação</span></li>
+                <li><a href="https://www.verifyemail.org/" target="_blank">VerifyEmail</a> <span class="tag">verificação</span></li>
+                <li><a href="https://emailcrawlr.com/" target="_blank">EmailCrawlr</a> <span class="tag">crawler</span></li>
+                <li><a href="https://www.emailformat.com/" target="_blank">EmailFormat</a> <span class="tag">formatos</span></li>
+            </ul>
+        </div>
+
+    </div><!-- /grid-2col -->
+
+
+
+    <!-- ============================================================ -->
+    <!-- SEÇÃO: FERRAMENTAS OSINT (REPOSITÓRIOS E INSTALAÇÃO LOCAL) -->
+    <!-- ============================================================ -->
+    <div class="section-title">
+        🛠️ FERRAMENTAS OSINT <span class="count">(repositórios GitHub e ferramentas para instalar)</span>
+        <span class="line"></span>
+    </div>
+
+    <div class="grid-2col">
+
+        <!-- 1. FRAMEWORKS E AUTOMAÇÃO -->
+        <div class="card cat-tools">
+            <h2><span class="icon">⚙️</span> Frameworks &amp; Automação <span class="badge-tool">TOOL</span></h2>
+            <ul class="link-list">
+                <li><a href="https://github.com/smicallef/spiderfoot" target="_blank">SpiderFoot</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/lanmaster53/recon-ng" target="_blank">Recon-ng</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/laramies/theHarvester" target="_blank">theHarvester</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/OWASP/Amass" target="_blank">Amass</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/blacklanternsecurity/bbot" target="_blank">BBOT</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/aboul3la/Sublist3r" target="_blank">Sublist3r</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+            </ul>
+        </div>
+
+        <!-- 2. ANÁLISE DE RELACIONAMENTOS -->
+        <div class="card cat-tools">
+            <h2><span class="icon">🔗</span> Análise de Relacionamentos <span class="badge-tool">TOOL</span></h2>
+            <ul class="link-list">
+                <li><a href="https://www.maltego.com/" target="_blank">Maltego</a> <span class="badge-web">web</span> <span class="badge-paid">pago</span></li>
+                <li><a href="https://www.palantir.com/" target="_blank">Palantir</a> <span class="badge-web">web</span> <span class="badge-paid">pago</span></li>
+                <li><a href="https://shadowdragon.io/horizon/" target="_blank">ShadowDragon Horizon</a> <span class="badge-web">web</span> <span class="badge-paid">pago</span></li>
+                <li><a href="https://github.com/neo4j/neo4j" target="_blank">Neo4j</a> <span class="badge-cli">CLI</span> <span class="badge-free">gratuito</span></li>
+                <li><a href="https://github.com/THIBET-Project/Thibet" target="_blank">Thibet</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+            </ul>
+        </div>
+
+        <!-- 3. NOMES DE USUÁRIO -->
+        <div class="card cat-tools">
+            <h2><span class="icon">👤</span> Nomes de Usuário <span class="badge-tool">TOOL</span></h2>
+            <ul class="link-list">
+                <li><a href="https://github.com/sherlock-project/sherlock" target="_blank">Sherlock</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/WebBreacher/WhatsMyName" target="_blank">WhatsMyName (CLI)</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/soxoj/maigret" target="_blank">Maigret</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/issamelferkh/username-search" target="_blank">Username Search</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+            </ul>
+        </div>
+
+        <!-- 4. E-MAIL E CREDENCIAIS -->
+        <div class="card cat-tools">
+            <h2><span class="icon">📧</span> E-mail &amp; Credenciais <span class="badge-tool">TOOL</span></h2>
+            <ul class="link-list">
+                <li><a href="https://github.com/megadose/holehe" target="_blank">Holehe</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/rix4uni/h8mail" target="_blank">H8mail</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/soxoj/ghunt" target="_blank">GHunt</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/evyatarmeged/email2domain" target="_blank">Email2Domain</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+            </ul>
+        </div>
+
+        <!-- 5. ANÁLISE DE IMAGENS E METADADOS -->
+        <div class="card cat-tools">
+            <h2><span class="icon">🖼️</span> Imagens &amp; Metadados <span class="badge-tool">TOOL</span></h2>
+            <ul class="link-list">
+                <li><a href="https://exiftool.org/" target="_blank">ExifTool</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/guelfoweb/peek" target="_blank">Peek (GUI para ExifTool)</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/lordnebula/metagoofil" target="_blank">Metagoofil</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/OsintStalker/OSINT-Image-Analysis" target="_blank">OSINT Image Analysis</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/mikepound/opencv-forensics" target="_blank">OpenCV Forensics</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+            </ul>
+        </div>
+
+        <!-- 6. DOMÍNIO E DNS -->
+        <div class="card cat-tools">
+            <h2><span class="icon">🌐</span> Domínio, IP &amp; DNS <span class="badge-tool">TOOL</span></h2>
+            <ul class="link-list">
+                <li><a href="https://github.com/OWASP/Amass" target="_blank">Amass</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/projectdiscovery/subfinder" target="_blank">Subfinder</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/aboul3la/Sublist3r" target="_blank">Sublist3r</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/projectdiscovery/httpx" target="_blank">Httpx</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/projectdiscovery/dnsx" target="_blank">Dnsx</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/tomnomnom/waybackurls" target="_blank">Waybackurls</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/tomnomnom/gau" target="_blank">Gau</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+            </ul>
+        </div>
+
+        <!-- 7. GEOLOCALIZAÇÃO -->
+        <div class="card cat-tools">
+            <h2><span class="icon">🗺️</span> Geolocalização <span class="badge-tool">TOOL</span></h2>
+            <ul class="link-list">
+                <li><a href="https://github.com/yoannchb/geolocator" target="_blank">Geolocator</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/megadose/geolocator" target="_blank">Geolocator (megadose)</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/kelvins/geocoder" target="_blank">Geocoder</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/Exordium/geolocation" target="_blank">Geolocation OSINT</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+            </ul>
+        </div>
+
+        <!-- 8. MONITORAMENTO E ALERTAS -->
+        <div class="card cat-tools">
+            <h2><span class="icon">🔔</span> Monitoramento &amp; Alertas <span class="badge-tool">TOOL</span></h2>
+            <ul class="link-list">
+                <li><a href="https://github.com/byt3bl33d3r/SprayingToolkit" target="_blank">Spraying Toolkit</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/blacklanternsecurity/bbot" target="_blank">BBOT (monitoramento)</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/projectdiscovery/chaos-client" target="_blank">Chaos Client</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+            </ul>
+        </div>
+
+        <!-- 9. DARK WEB E TOR -->
+        <div class="card cat-tools">
+            <h2><span class="icon">🌑</span> Dark Web &amp; Tor <span class="badge-tool">TOOL</span></h2>
+            <ul class="link-list">
+                <li><a href="https://www.torproject.org/" target="_blank">Tor Browser</a> <span class="badge-web">web</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/ahmia/ahmia-site" target="_blank">Ahmia (self-hosted)</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/onionprobe/onionprobe" target="_blank">OnionProbe</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+            </ul>
+        </div>
+
+        <!-- 10. FORENSE DIGITAL -->
+        <div class="card cat-tools">
+            <h2><span class="icon">🔬</span> Forense Digital <span class="badge-tool">TOOL</span></h2>
+            <ul class="link-list">
+                <li><a href="https://github.com/sleuthkit/sleuthkit" target="_blank">The Sleuth Kit</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/volatilityfoundation/volatility" target="_blank">Volatility (memory forensics)</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/autopsy/autopsy" target="_blank">Autopsy</a> <span class="badge-web">web</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/dfirfpi/dfirfpi" target="_blank">DFIR FPI</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+            </ul>
+        </div>
+
+        <!-- 11. FERRAMENTAS COMPLEMENTARES -->
+        <div class="card cat-tools">
+            <h2><span class="icon">🧩</span> Complementares <span class="badge-tool">TOOL</span></h2>
+            <ul class="link-list">
+                <li><a href="https://github.com/gchq/CyberChef" target="_blank">CyberChef</a> <span class="badge-web">web</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/sensepost/gowitness" target="_blank">GoWitness</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/projectdiscovery/nuclei" target="_blank">Nuclei</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://github.com/OWASP/DevSecOps" target="_blank">DevSecOps Tools</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+            </ul>
+        </div>
+
+    </div><!-- /grid-2col -->
+
+
+
+    <!-- ============================================================ -->
+    <!-- SEÇÃO BÔNUS: FERRAMENTAS COM VERSÃO WEB E CLI -->
+    <!-- ============================================================ -->
+    <div class="section-title">
+        🔄 FERRAMENTAS HÍBRIDAS <span class="count">(versão web + repositório para instalação)</span>
+        <span class="line"></span>
+    </div>
+
+    <div class="grid-2col">
+
+        <div class="card cat-tools">
+            <h2><span class="icon">🌐</span> Ferramentas com Interface Web e CLI</h2>
+            <ul class="link-list">
+                <li><a href="https://whatsmyname.app/" target="_blank">WhatsMyName (Web)</a> <span class="badge-web">web</span></li>
+                <li><a href="https://github.com/WebBreacher/WhatsMyName" target="_blank">WhatsMyName (CLI)</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://www.spiderfoot.net/" target="_blank">SpiderFoot (Web)</a> <span class="badge-web">web</span></li>
+                <li><a href="https://github.com/smicallef/spiderfoot" target="_blank">SpiderFoot (CLI)</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+                <li><a href="https://www.shodan.io/" target="_blank">Shodan (Web)</a> <span class="badge-web">web</span></li>
+                <li><a href="https://github.com/achillean/shodan-python" target="_blank">Shodan (Python CLI)</a> <span class="badge-cli">CLI</span> <span class="badge-install">instalar</span></li>
+            </ul>
+        </div>
+
+        <div class="card cat-tools">
+            <h2><span class="icon">📦</span> Pacotes e Coleções de Ferramentas</h2>
+            <ul class="link-list">
+                <li><a href="https://github.com/ONsec-Lab/OSINT-Collection" target="_blank">OSINT Collection (ONsec)</a> <span class="badge-github">GitHub</span></li>
+                <li><a href="https://github.com/jivoi/awesome-osint" target="_blank">Awesome OSINT</a> <span class="badge-github">GitHub</span></li>
+                <li><a href="https://github.com/khast3x/OSINT" target="_blank">OSINT Toolkit (khast3x)</a> <span class="badge-github">GitHub</span></li>
+                <li><a href="https://github.com/blacklanternsecurity/bbot" target="_blank">BBOT (coleção de módulos)</a> <span class="badge-github">GitHub</span></li>
+            </ul>
+        </div>
+
+    </div><!-- /grid-2col -->
+
+    <!-- ============================================================ -->
+    <!-- FOOTER -->
+    <!-- ============================================================ -->
+    <div class="footer">
+        <p>🔍 OSINT Resource Center • Coleção curada para inteligência de fontes abertas</p>
+        <p style="margin-top:6px;">
+            <span class="badge-site">SITE</span> = serviço online pronto para uso &nbsp;|&nbsp;
+            <span class="badge-tool">TOOL</span> = ferramenta para instalar localmente &nbsp;|&nbsp;
+            <span class="badge-github">GitHub</span> = repositório de código
+        </p>
+        <p style="margin-top:10px; font-size:0.7rem; color:#334455;">
+            Use com responsabilidade • Apenas para fins educacionais e de pesquisa
+        </p>
+    </div>
+
+</div><!-- /container -->
+
+<script>
+    // Contagem simples de itens para estatística
+    document.addEventListener('DOMContentLoaded', function() {
+        const links = document.querySelectorAll('.link-list a');
+        document.getElementById('totalCount').textContent = links.length;
+    });
+</script>
+
+</body>
+</html>

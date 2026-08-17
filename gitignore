@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+
+# Arquivos sensíveis
+*.log
+*.db
+*.sqlite3
+config.ini
+.env
+*.key
+*.pem
+*.crt
+
+# Dados coletados (opcional - ajuste conforme necessário)
+data/
+output/
+results/
+*.csv
+*.json
+*.xlsx
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
