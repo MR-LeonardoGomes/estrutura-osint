@@ -1,6 +1,6 @@
 # 🔍 OSINT Resource Center
 
-**Coleção Grada de sites e ferramentas-cli para investigação de fontes abertas**
+**Coleção Grauda de sites e ferramentas-cli para investigação de fontes abertas**
 
 <div align="center">
   <img src="https://i.postimg.cc/jSyw7j1L/Mr-Leonardo-Gomes.png" alt="Metodologia de Caça a Bugs 2026" style="width: 90%; max-width: 700px;">
